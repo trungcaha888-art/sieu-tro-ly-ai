@@ -77,6 +77,14 @@
                         <input type="tel" placeholder="Số điện thoại" required>
                         <button type="submit" class="webinar-submit-btn">ĐĂNG KÝ NGAY</button>
                     </form>
+                    <div class="form-countdown">
+                        <p class="countdown-label">⚡ Ưu đãi kết thúc sau:</p>
+                        <div class="countdown-timer" id="countdown-top">
+                            <div class="countdown-box"><span class="countdown-num" id="ct-min-top">10</span><span class="countdown-unit">Phút</span></div>
+                            <div class="countdown-sep">:</div>
+                            <div class="countdown-box"><span class="countdown-num" id="ct-sec-top">00</span><span class="countdown-unit">Giây</span></div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="webinar-info-bar">
@@ -312,6 +320,14 @@
                         <input type="tel" placeholder="Số điện thoại" required>
                         <button type="submit" class="webinar-submit-btn">ĐĂNG KÝ NGAY</button>
                     </form>
+                    <div class="form-countdown">
+                        <p class="countdown-label">⚡ Ưu đãi kết thúc sau:</p>
+                        <div class="countdown-timer" id="countdown-bottom">
+                            <div class="countdown-box"><span class="countdown-num" id="ct-min-bottom">10</span><span class="countdown-unit">Phút</span></div>
+                            <div class="countdown-sep">:</div>
+                            <div class="countdown-box"><span class="countdown-num" id="ct-sec-bottom">00</span><span class="countdown-unit">Giây</span></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -379,6 +395,43 @@
         // Thay URL bên dưới bằng URL Apps Script Web App của bạn
         // ============================
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpK07teW-jeXVfUtUpgAGgEOkgWh-8DLGZeu_ydlnwNN094XiVQOqS0h31SFzqoqMa/exec';
+
+        // ============================
+        // 10-MINUTE COUNTDOWN TIMER
+        // ============================
+        (function() {
+            const COUNTDOWN_MINUTES = 10;
+            const storageKey = 'webinar_countdown_end';
+            let endTime = localStorage.getItem(storageKey);
+            if (!endTime || Number(endTime) < Date.now()) {
+                endTime = Date.now() + COUNTDOWN_MINUTES * 60 * 1000;
+                localStorage.setItem(storageKey, endTime);
+            }
+            endTime = Number(endTime);
+
+            function updateCountdown() {
+                const diff = Math.max(0, endTime - Date.now());
+                const mins = Math.floor(diff / 60000);
+                const secs = Math.floor((diff % 60000) / 1000);
+                const minStr = String(mins).padStart(2, '0');
+                const secStr = String(secs).padStart(2, '0');
+
+                ['top', 'bottom'].forEach(pos => {
+                    const minEl = document.getElementById('ct-min-' + pos);
+                    const secEl = document.getElementById('ct-sec-' + pos);
+                    const timerEl = document.getElementById('countdown-' + pos);
+                    if (minEl) minEl.textContent = minStr;
+                    if (secEl) secEl.textContent = secStr;
+                    if (timerEl) {
+                        if (mins < 2) timerEl.classList.add('countdown-urgent');
+                        else timerEl.classList.remove('countdown-urgent');
+                    }
+                });
+
+                if (diff > 0) requestAnimationFrame(() => setTimeout(updateCountdown, 1000));
+            }
+            updateCountdown();
+        })();
 
         // Scroll Reveal Animation
         const observer = new IntersectionObserver((entries) => {

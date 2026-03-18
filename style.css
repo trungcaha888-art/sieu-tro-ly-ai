@@ -768,17 +768,17 @@ h2 {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 40px 36px;
+    padding: 48px 40px;
     box-shadow: var(--shadow-medium);
     position: sticky;
     top: 24px;
 }
 
 .webinar-form-title {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     font-weight: 800;
     text-align: center;
-    margin-bottom: 28px;
+    margin-bottom: 32px;
     color: var(--text-primary);
     line-height: 1.4;
 }
@@ -786,20 +786,83 @@ h2 {
 .webinar-form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 18px;
 }
 
 .webinar-form input {
     width: 100%;
-    padding: 16px 20px;
+    padding: 18px 22px;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-family: inherit;
     background: var(--bg-secondary);
     color: var(--text-primary);
     transition: var(--transition);
     outline: none;
+}
+
+/* Countdown Timer */
+.form-countdown {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.countdown-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 12px;
+}
+
+.countdown-timer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.countdown-box {
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: #fff;
+    border-radius: var(--radius-sm);
+    padding: 12px 20px;
+    min-width: 70px;
+    text-align: center;
+    box-shadow: 0 4px 12px var(--accent-glow);
+}
+
+.countdown-num {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.countdown-unit {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 4px;
+    opacity: 0.9;
+}
+
+.countdown-sep {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--accent);
+}
+
+@keyframes countdown-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.countdown-urgent .countdown-box {
+    animation: countdown-pulse 1s ease-in-out infinite;
+    background: linear-gradient(135deg, #e53e3e, #f56565);
+    box-shadow: 0 4px 16px rgba(229, 62, 62, 0.4);
 }
 
 .webinar-form input::placeholder {

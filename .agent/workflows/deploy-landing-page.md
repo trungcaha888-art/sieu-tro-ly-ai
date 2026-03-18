@@ -202,7 +202,64 @@ D:\Git\cmd\git.exe push
 
 ---
 
-## 8. Lưu ý quan trọng
+## 8. Meta Pixel (Facebook Ads Tracking)
+
+Dán mã pixel vào `<head>`, trước `</head>`:
+
+```html
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'YOUR_PIXEL_ID');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+```
+
+> Thay `YOUR_PIXEL_ID` bằng ID pixel thật. Kiểm tra bằng extension **Meta Pixel Helper** trên Chrome.
+
+---
+
+## 9. Mẫu bài viết bán hàng
+
+```
+🤖 Bạn vẫn đang làm mọi thứ bằng tay?
+
+Báo cáo. Phân tích. Theo dõi doanh thu. Trả lời tin nhắn...
+Mỗi ngày mất 3–4 tiếng cho việc lặp đi lặp lại → lãng phí 90 tiếng/tháng.
+
+💡 Chỉ cần 1 Trợ Lý AI – tất cả chạy tự động 24/7 trên Zalo hoặc Telegram.
+
+🎓 WEBINAR MIỄN PHÍ: SIÊU TRỢ LÍ AI CÁ NHÂN
+
+✅ Xây dựng Trợ lý AI từ A–Z (không cần biết code)
+✅ Demo trực tiếp: AI tự động báo cáo, phân tích, bắt trend
+✅ Tự động hóa 80% công việc chỉ với 1 hệ thống
+
+🕐 19:45 – 22:00 | Ngày 25/03/2026
+📍 Online qua Zoom
+💰 Hoàn toàn MIỄN PHÍ
+
+👉 ĐĂNG KÝ NGAY: https://sieutroly.trungcaha.click
+
+⚠️ Số lượng có hạn – Đừng bỏ lỡ!
+```
+
+> Dùng cho: Facebook Ads, post fanpage, gửi Zalo, Messenger.
+
+---
+
+## 10. Lưu ý quan trọng
 
 | Vấn đề | Giải pháp |
 |--------|-----------|
@@ -213,3 +270,4 @@ D:\Git\cmd\git.exe push
 | Nhiều form trên 1 trang | Dùng `querySelectorAll().forEach()` |
 | FB/Zalo không cập nhật thumbnail | FB: Scrape Again tại debug tool. Zalo: đợi vài giờ |
 | DNS chưa nhận | Đợi 5-30 phút, kiểm tra CNAME đúng chưa |
+| Meta Pixel không track | Kiểm tra bằng Meta Pixel Helper extension |
