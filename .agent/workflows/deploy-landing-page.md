@@ -6,7 +6,7 @@ description: Quy trình tạo landing page webinar, tích hợp Google Sheet, de
 
 ## Tổng quan
 
-Quy trình đầy đủ từ tạo landing page, tích hợp form đăng ký → Google Sheet, popup sau đăng ký, đến deploy lên Vercel tự động qua GitHub.
+Quy trình đầy đủ từ tạo landing page, tích hợp form đăng ký → Google Sheet, popup sau đăng ký, OG thumbnail, đến deploy lên Vercel tự động qua GitHub + custom domain.
 
 ---
 
@@ -16,10 +16,8 @@ Quy trình đầy đủ từ tạo landing page, tích hợp form đăng ký →
 📁 Landing Page/
 ├── index.html        # Trang chính
 ├── style.css         # CSS styling
-├── og-image.png      # Ảnh thumbnail khi share link
-├── ảnh 4.png         # Ảnh minh họa
-├── ảnh 5.png
-├── ảnh 6.png
+├── og-image.png      # Ảnh thumbnail khi share link (1200x630)
+├── ảnh *.png         # Ảnh minh họa
 └── content.txt       # Nội dung gốc
 ```
 
@@ -29,7 +27,7 @@ Quy trình đầy đủ từ tạo landing page, tích hợp form đăng ký →
 
 ### Bước 1: Tạo Google Apps Script
 
-Mở Google Sheet → **Extensions → Apps Script** → dán code:
+Mở Google Sheet → **Extensions → Apps Script** → thêm hàm `doPost`:
 
 ```javascript
 function doPost(e) {
@@ -38,24 +36,20 @@ function doPost(e) {
     e.parameter.timestamp,
     e.parameter.name,
     e.parameter.email,
-    e.parameter.phone
+    e.parameter.phone,
+    e.parameter.link_utm
   ]);
   return ContentService.createTextOutput("OK");
 }
 ```
 
-> ⚠️ Thay `SHEET_ID` bằng ID thật (lấy từ URL sheet). Nếu Apps Script đã có code cũ (`doGet`), thêm `doPost` ở cuối file.
+> ⚠️ Thay `SHEET_ID` bằng ID thật. Nếu đã có `doGet`, thêm `doPost` ở cuối file (KHÔNG tạo 2 hàm `doPost`).
 
 ### Bước 2: Deploy Apps Script
 
-- **Deploy → New deployment → Web app**
-- Execute as: **Me**
-- Who has access: **Anyone**
-- Copy URL exec
+**Deploy → New deployment → Web app** → Execute as: Me → Who has access: Anyone → Copy URL exec.
 
-### Bước 3: Code gửi dữ liệu (trong index.html)
-
-Dùng **hidden iframe** để bypass CORS 100%:
+### Bước 3: Code gửi dữ liệu (hidden iframe bypass CORS)
 
 ```javascript
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_URL/exec';
@@ -84,53 +78,66 @@ function sendToGoogleSheet(data) {
 
         document.body.appendChild(hiddenForm);
         hiddenForm.submit();
-
-        setTimeout(() => {
-            iframe.remove();
-            hiddenForm.remove();
-            resolve();
-        }, 3000);
+        setTimeout(() => { iframe.remove(); hiddenForm.remove(); resolve(); }, 3000);
     });
 }
 ```
 
-> ⚠️ KHÔNG dùng `fetch` với `mode: 'no-cors'` + `Content-Type: application/json` → sẽ bị chặn.
-> ⚠️ KHÔNG dùng `fetch` với `FormData` trực tiếp → Google redirect gây lỗi CORS.
-> ✅ Dùng **hidden iframe + form thật** → bypass CORS hoàn toàn.
+> ⚠️ KHÔNG dùng `fetch` + `no-cors` + `application/json` → bị chặn. Dùng **hidden iframe** là chuẩn.
 
----
-
-## 3. Popup sau đăng ký
-
-Popup hiện sau khi submit form, chứa:
-- Thanh sọc đỏ-trắng trên cùng
-- Tiêu đề "CÒN 1 BƯỚC NỮA..."
-- Nút vào nhóm Zalo
-- Đồng hồ đếm ngược
+### Bước 4: Gửi kèm UTM tracking
 
 ```javascript
-// Hiện popup
-popupOverlay.classList.add('active');
-document.body.style.overflow = 'hidden';
-startCountdown();
+const linkUtm = window.location.href;
+await sendToGoogleSheet({ name, email, phone, timestamp: new Date().toLocaleString('vi-VN'), link_utm: linkUtm });
+```
+
+### Nhiều form trên 1 trang
+
+```javascript
+document.querySelectorAll('.webinar-form').forEach(form => {
+    form.addEventListener('submit', async function(e) { ... });
+});
 ```
 
 ---
 
-## 4. OG Meta Tags (Thumbnail khi share link)
+## 3. OG Thumbnail (Facebook / Zalo)
 
-Thêm vào `<head>`:
+### Meta tags (BẮT BUỘC dùng URL tuyệt đối):
 
 ```html
 <meta property="og:type" content="website">
-<meta property="og:title" content="Tiêu đề trang">
+<meta property="og:url" content="https://YOUR_DOMAIN/">
+<meta property="og:title" content="Tiêu đề">
 <meta property="og:description" content="Mô tả">
 <meta property="og:image" content="https://YOUR_DOMAIN/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:locale" content="vi_VN">
 ```
 
-> ⚠️ `og:image` **BẮT BUỘC** dùng URL tuyệt đối (https://...), không dùng relative path.
+### Kích thước ảnh tối ưu:
+- **Facebook**: 1200x630 px (tỷ lệ 1.91:1)
+- **Zalo**: Tương tự Facebook
+
+### Buộc cập nhật thumbnail:
+- **Facebook**: Vào [developers.facebook.com/tools/debug](https://developers.facebook.com/tools/debug) → dán link → bấm **Scrape Again**
+- **Zalo**: Đợi vài giờ hoặc gửi link mới
+
+---
+
+## 4. Cài Git trên máy
+
+```powershell
+# Cài qua winget (tự động):
+winget install --id Git.Git -e --source winget --accept-package-agreements --accept-source-agreements
+
+# Git được cài ở D:\Git (tùy máy). Tìm bằng:
+Get-ChildItem -Path "C:\","D:\" -Filter "git.exe" -Recurse -ErrorAction SilentlyContinue -Depth 4 | Select-Object -First 3 -ExpandProperty FullName
+```
+
+> ⚠️ Sau khi cài, cần đóng mở lại VS Code hoặc dùng full path `D:\Git\cmd\git.exe`.
 
 ---
 
@@ -139,7 +146,6 @@ Thêm vào `<head>`:
 ### Lần đầu (init repo):
 
 ```powershell
-# Git được cài ở D:\Git (tùy máy)
 D:\Git\cmd\git.exe init
 D:\Git\cmd\git.exe config user.email "your@email.com"
 D:\Git\cmd\git.exe config user.name "your-username"
@@ -160,7 +166,7 @@ D:\Git\cmd\git.exe commit -m "Cập nhật landing page"
 D:\Git\cmd\git.exe push
 ```
 
-> Sau khi push, Vercel sẽ **tự động deploy lại** (nếu đã kết nối).
+> Push xong → Vercel **tự động deploy lại** trong ~30 giây.
 
 ---
 
@@ -170,16 +176,40 @@ D:\Git\cmd\git.exe push
 2. **Import** → chọn repo
 3. Framework Preset: **Other**
 4. Bấm **Deploy**
-5. Sau deploy: cập nhật `og:image` URL thành domain Vercel
 
 ---
 
-## 7. Lưu ý quan trọng
+## 7. Custom Domain (Vercel + Hostinger)
+
+### Bước 1: Thêm domain trên Vercel
+- Vào project → **Settings → Domains**
+- Nhập `subdomain.yourdomain.com` → **Add**
+- Chọn **Connect to an environment** → **Production** → **Save**
+- Vercel hiện thông tin CNAME record
+
+### Bước 2: Thêm CNAME trên Hostinger
+- Vào **DNS / Máy chủ tên miền**
+- **Thêm bản ghi**:
+
+| Loại | Tên | Trỏ tới | TTL |
+|------|-----|---------|-----|
+| CNAME | `subdomain` | `xxx.vercel-dns-xxx.com` (copy từ Vercel) | 14400 |
+
+- Đợi **5–30 phút** → Vercel hiện ✅ Valid Configuration
+- Vercel tự cấp SSL (https) miễn phí
+
+> ⚠️ Nếu Hostinger dùng dns-parking: Chỉnh sửa DNS → chọn "Máy chủ tên miền Hostinger" trước.
+
+---
+
+## 8. Lưu ý quan trọng
 
 | Vấn đề | Giải pháp |
 |--------|-----------|
-| Git chưa nhận trong VS Code | Đóng VS Code, mở lại. Hoặc dùng full path `D:\Git\cmd\git.exe` |
-| Form không gửi được data | Dùng hidden iframe, KHÔNG dùng fetch + no-cors |
-| OG image không hiện | Phải dùng URL tuyệt đối (https://...) |
-| Apps Script đã có code cũ | Thêm `doPost` ở cuối file, KHÔNG tạo hàm doPost thứ 2 |
-| Nhiều form trên 1 trang | Dùng `querySelectorAll('.webinar-form').forEach(...)` |
+| Git chưa nhận trong VS Code | Đóng VS Code mở lại, hoặc dùng full path `D:\Git\cmd\git.exe` |
+| Form không gửi data | Dùng hidden iframe, KHÔNG dùng fetch + no-cors |
+| OG image không hiện | Phải dùng URL tuyệt đối `https://...` |
+| Apps Script đã có code cũ | Thêm `doPost` cuối file, KHÔNG tạo 2 hàm cùng tên |
+| Nhiều form trên 1 trang | Dùng `querySelectorAll().forEach()` |
+| FB/Zalo không cập nhật thumbnail | FB: Scrape Again tại debug tool. Zalo: đợi vài giờ |
+| DNS chưa nhận | Đợi 5-30 phút, kiểm tra CNAME đúng chưa |
