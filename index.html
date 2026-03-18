@@ -359,7 +359,7 @@
         // GOOGLE SHEET URL
         // Thay URL bên dưới bằng URL Apps Script Web App của bạn
         // ============================
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwmeyJNcgKDfeWZF_5SndfwEnxghqpV_8AKEdTXJq6mCCPlgtg3LRpbg_yEm3I4C8ba/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpK07teW-jeXVfUtUpgAGgEOkgWh-8DLGZeu_ydlnwNN094XiVQOqS0h31SFzqoqMa/exec';
 
         // Scroll Reveal Animation
         const observer = new IntersectionObserver((entries) => {
@@ -411,8 +411,10 @@
             submitBtn.style.opacity = '0.7';
 
             try {
+                // Lấy link UTM từ URL hiện tại
+                const linkUtm = window.location.href;
                 // Gửi dữ liệu qua hidden iframe (tránh CORS hoàn toàn)
-                await sendToGoogleSheet({ name, email, phone, timestamp: new Date().toLocaleString('vi-VN') });
+                await sendToGoogleSheet({ name, email, phone, timestamp: new Date().toLocaleString('vi-VN'), link_utm: linkUtm });
             } catch (err) {
                 console.log('Lỗi gửi:', err);
             }
