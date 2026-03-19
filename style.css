@@ -878,7 +878,7 @@ h2 {
 .webinar-submit-btn {
     width: 100%;
     padding: 18px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    background: linear-gradient(135deg, #22c55e, #16a34a);
     color: #fff;
     font-size: 1.2rem;
     font-weight: 800;
@@ -888,13 +888,13 @@ h2 {
     border-radius: var(--radius-sm);
     cursor: pointer;
     transition: var(--transition);
-    box-shadow: 0 4px 20px var(--accent-glow);
+    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.3);
     margin-top: 8px;
 }
 
 .webinar-submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px var(--accent-glow-strong);
+    box-shadow: 0 8px 30px rgba(34, 197, 94, 0.45);
 }
 
 .webinar-submit-btn:active {

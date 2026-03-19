@@ -124,10 +124,58 @@ document.querySelectorAll('.webinar-form').forEach(form => {
 ### Buộc cập nhật thumbnail:
 - **Facebook**: Vào [developers.facebook.com/tools/debug](https://developers.facebook.com/tools/debug) → dán link → bấm **Scrape Again**
 - **Zalo**: Đợi vài giờ hoặc gửi link mới
+---
+
+## 4. Countdown Timer (Tạo urgency)
+
+### HTML (đặt ngay sau `</form>` trong form-wrapper):
+
+```html
+<div class="form-countdown">
+    <p class="countdown-label">⚡ Ưu đãi kết thúc sau:</p>
+    <div class="countdown-timer" id="countdown-top">
+        <div class="countdown-box"><span class="countdown-num" id="ct-min-top">10</span><span class="countdown-unit">Phút</span></div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-box"><span class="countdown-num" id="ct-sec-top">00</span><span class="countdown-unit">Giây</span></div>
+    </div>
+</div>
+```
+
+### JavaScript (dùng localStorage để giữ countdown khi reload):
+
+```javascript
+(function() {
+    const COUNTDOWN_MINUTES = 10;
+    const storageKey = 'webinar_countdown_end';
+    let endTime = localStorage.getItem(storageKey);
+    if (!endTime || Number(endTime) < Date.now()) {
+        endTime = Date.now() + COUNTDOWN_MINUTES * 60 * 1000;
+        localStorage.setItem(storageKey, endTime);
+    }
+    endTime = Number(endTime);
+
+    function updateCountdown() {
+        const diff = Math.max(0, endTime - Date.now());
+        const mins = Math.floor(diff / 60000);
+        const secs = Math.floor((diff % 60000) / 1000);
+        // Cập nhật cả 2 timer (top + bottom)
+        ['top', 'bottom'].forEach(pos => {
+            const minEl = document.getElementById('ct-min-' + pos);
+            const secEl = document.getElementById('ct-sec-' + pos);
+            if (minEl) minEl.textContent = String(mins).padStart(2, '0');
+            if (secEl) secEl.textContent = String(secs).padStart(2, '0');
+        });
+        if (diff > 0) requestAnimationFrame(() => setTimeout(updateCountdown, 1000));
+    }
+    updateCountdown();
+})();
+```
+
+> Dưới 2 phút → chuyển đỏ + nhấp nháy (class `countdown-urgent`).
 
 ---
 
-## 4. Cài Git trên máy
+## 5. Cài Git trên máy
 
 ```powershell
 # Cài qua winget (tự động):
@@ -141,7 +189,7 @@ Get-ChildItem -Path "C:\","D:\" -Filter "git.exe" -Recurse -ErrorAction Silently
 
 ---
 
-## 5. Push code lên GitHub
+## 6. Push code lên GitHub
 
 ### Lần đầu (init repo):
 
@@ -170,7 +218,7 @@ D:\Git\cmd\git.exe push
 
 ---
 
-## 6. Deploy lên Vercel
+## 7. Deploy lên Vercel
 
 1. Vào **[vercel.com/new](https://vercel.com/new)** → đăng nhập GitHub
 2. **Import** → chọn repo
@@ -179,7 +227,7 @@ D:\Git\cmd\git.exe push
 
 ---
 
-## 7. Custom Domain (Vercel + Hostinger)
+## 8. Custom Domain (Vercel + Hostinger)
 
 ### Bước 1: Thêm domain trên Vercel
 - Vào project → **Settings → Domains**
@@ -202,7 +250,7 @@ D:\Git\cmd\git.exe push
 
 ---
 
-## 8. Meta Pixel (Facebook Ads Tracking)
+## 9. Meta Pixel (Facebook Ads Tracking)
 
 Dán mã pixel vào `<head>`, trước `</head>`:
 
@@ -230,7 +278,7 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"
 
 ---
 
-## 9. Mẫu bài viết bán hàng
+## 10. Mẫu bài viết bán hàng
 
 ```
 🤖 Bạn vẫn đang làm mọi thứ bằng tay?
@@ -259,7 +307,7 @@ Mỗi ngày mất 3–4 tiếng cho việc lặp đi lặp lại → lãng phí 
 
 ---
 
-## 10. Lưu ý quan trọng
+## 11. Lưu ý quan trọng
 
 | Vấn đề | Giải pháp |
 |--------|-----------|
