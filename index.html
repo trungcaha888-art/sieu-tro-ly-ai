@@ -457,6 +457,25 @@
         });
 
         // ============================
+        // HÀM ĐỌC UTM PARAMETERS TỪ URL
+        // ============================
+        function getUtmParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                utm_source: params.get('utm_source') || '',
+                utm_medium: params.get('utm_medium') || '',
+                utm_campaign: params.get('utm_campaign') || '',
+                utm_content: params.get('utm_content') || '',
+                utm_term: params.get('utm_term') || '',
+                utm_id: params.get('utm_id') || '',
+                fbclid: params.get('fbclid') || ''
+            };
+        }
+
+        // Lấy UTM ngay khi trang load (trước khi user có thể thay đổi URL)
+        const utmData = getUtmParams();
+
+        // ============================
         // FORM SUBMISSION → GOOGLE SHEET + POPUP
         // ============================
         const popupOverlay = document.getElementById('popup-overlay');
@@ -484,8 +503,10 @@
             try {
                 // Lấy link UTM từ URL hiện tại
                 const linkUtm = window.location.href;
+                // Lấy utm_source (decode tự động bởi URLSearchParams)
+                const source = utmData.utm_source;
                 // Gửi dữ liệu qua hidden iframe (tránh CORS hoàn toàn)
-                await sendToGoogleSheet({ name, email, phone, timestamp: new Date().toLocaleString('vi-VN'), link_utm: linkUtm });
+                await sendToGoogleSheet({ name, email, phone, timestamp: new Date().toLocaleString('vi-VN'), link_utm: linkUtm, source: source });
             } catch (err) {
                 console.log('Lỗi gửi:', err);
             }
