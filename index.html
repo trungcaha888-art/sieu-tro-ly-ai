@@ -132,9 +132,9 @@
                 <div class="webinar-form-wrapper">
                     <h3 class="webinar-form-title">Đăng Ký Tham Gia <span class="highlight">Miễn Phí</span><br>Webinar SIÊU TRỢ LÍ AI</h3>
                     <form class="webinar-form" id="webinar-form-top">
-                        <input type="text" placeholder="Họ và tên của bạn" required>
-                        <input type="email" placeholder="Email của bạn" required>
-                        <input type="tel" placeholder="Số điện thoại" required>
+                        <input type="text" name="name" autocomplete="name" placeholder="Họ và tên của bạn" required>
+                        <input type="email" name="email" autocomplete="email" placeholder="Email của bạn" required>
+                        <input type="tel" name="phone" autocomplete="tel" placeholder="Số điện thoại" required>
                         <button type="submit" class="webinar-submit-btn">ĐĂNG KÝ NGAY</button>
                     </form>
                     <div class="form-countdown">
@@ -374,9 +374,9 @@
                 <div class="webinar-form-wrapper">
                     <h3 class="webinar-form-title">Đăng Ký Tham Gia <span class="highlight">Miễn Phí</span><br>Webinar SIÊU TRỢ LÍ AI</h3>
                     <form class="webinar-form" id="webinar-form">
-                        <input type="text" placeholder="Họ và tên của bạn" required>
-                        <input type="email" placeholder="Email của bạn" required>
-                        <input type="tel" placeholder="Số điện thoại" required>
+                        <input type="text" name="name" autocomplete="name" placeholder="Họ và tên của bạn" required>
+                        <input type="email" name="email" autocomplete="email" placeholder="Email của bạn" required>
+                        <input type="tel" name="phone" autocomplete="tel" placeholder="Số điện thoại" required>
                         <button type="submit" class="webinar-submit-btn">ĐĂNG KÝ NGAY</button>
                     </form>
                     <div class="form-countdown">
@@ -449,6 +449,68 @@
     </div>
 
     <script>
+        // ============================
+        // AUTOCAPTURE & AUTOFILL LOGIC
+        // ============================
+        function setRootCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            const hostParts = window.location.hostname.split('.');
+            let rootDomain = window.location.hostname;
+            if (hostParts.length > 2) {
+                rootDomain = hostParts.slice(-2).join('.');
+            }
+            document.cookie = name + "=" + (value || "")  + expires + "; path=/; domain=." + rootDomain;
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i=0;i < ca.length;i++) {
+                let c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+
+        function autoFillForm() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let savedName = urlParams.get('name') || '';
+            let savedEmail = urlParams.get('email') || '';
+            let savedPhone = urlParams.get('phone') || '';
+
+            if(!savedName) {
+                let tmp = localStorage.getItem('user_name') || getCookie('user_name');
+                if(tmp) try { savedName = decodeURIComponent(tmp); } catch(e) { savedName = tmp; }
+            }
+            if(!savedEmail) {
+                let tmp = localStorage.getItem('user_email') || getCookie('user_email');
+                if(tmp) try { savedEmail = decodeURIComponent(tmp); } catch(e) { savedEmail = tmp; }
+            }
+            if(!savedPhone) {
+                let tmp = localStorage.getItem('user_phone') || getCookie('user_phone');
+                if(tmp) try { savedPhone = decodeURIComponent(tmp); } catch(e) { savedPhone = tmp; }
+            }
+
+            if (savedName || savedEmail || savedPhone) {
+                document.querySelectorAll('.webinar-form').forEach(form => {
+                    const nameInput = form.querySelector('input[type="text"]');
+                    const emailInput = form.querySelector('input[type="email"]');
+                    const phoneInput = form.querySelector('input[type="tel"]');
+                    if (savedName && nameInput && !nameInput.value) nameInput.value = savedName;
+                    if (savedEmail && emailInput && !emailInput.value) emailInput.value = savedEmail;
+                    if (savedPhone && phoneInput && !phoneInput.value) phoneInput.value = savedPhone;
+                });
+            }
+        }
+        
+        autoFillForm();
+
         // ============================
         // GOOGLE SHEET URL
         // Thay URL bên dưới bằng URL Apps Script Web App của bạn
@@ -553,6 +615,16 @@
             const phone = form.querySelector('input[type="tel"]').value.trim();
 
             if (!name || !email || !phone) return;
+
+            // --- SAVE AUTOCAPTURE DATA ---
+            localStorage.setItem('user_name', encodeURIComponent(name));
+            localStorage.setItem('user_email', encodeURIComponent(email));
+            localStorage.setItem('user_phone', encodeURIComponent(phone));
+            
+            setRootCookie('user_name', encodeURIComponent(name), 365);
+            setRootCookie('user_email', encodeURIComponent(email), 365);
+            setRootCookie('user_phone', encodeURIComponent(phone), 365);
+            // -----------------------------
 
             // Loading state
             const originalText = submitBtn.textContent;
