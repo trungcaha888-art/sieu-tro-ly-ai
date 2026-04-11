@@ -63,6 +63,328 @@ h2 {
     color: var(--accent);
 }
 
+/* === HERO BANNER === */
+.hero-banner {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1145 40%, #0d1f3c 70%, #0a1628 100%);
+    overflow: hidden;
+    padding: 80px 0 60px;
+}
+
+.banner-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+}
+
+/* Floating particles */
+.banner-particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.banner-p1 {
+    width: 6px; height: 6px;
+    background: #E8652D;
+    top: 15%; left: 10%;
+    animation: bannerFloat 5s ease-in-out infinite;
+}
+.banner-p2 {
+    width: 8px; height: 8px;
+    background: #7c3aed;
+    top: 25%; right: 15%;
+    animation: bannerFloat 4s ease-in-out infinite 1s;
+}
+.banner-p3 {
+    width: 5px; height: 5px;
+    background: #06b6d4;
+    bottom: 30%; left: 20%;
+    animation: bannerFloat 6s ease-in-out infinite 0.5s;
+}
+.banner-p4 {
+    width: 10px; height: 10px;
+    background: rgba(232,101,45,0.4);
+    top: 60%; left: 5%;
+    animation: bannerFloat 7s ease-in-out infinite 2s;
+}
+.banner-p5 {
+    width: 4px; height: 4px;
+    background: #818cf8;
+    bottom: 20%; right: 25%;
+    animation: bannerFloat 5s ease-in-out infinite 1.5s;
+}
+
+@keyframes bannerFloat {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.4; }
+    50% { transform: translateY(-25px) scale(1.3); opacity: 0.8; }
+}
+
+/* Banner Layout */
+.banner-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.banner-content {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.banner-badge {
+    display: inline-block;
+    padding: 10px 28px;
+    background: rgba(232, 101, 45, 0.15);
+    border: 1px solid rgba(232, 101, 45, 0.4);
+    border-radius: 100px;
+    color: #F0845A;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-bottom: 28px;
+    backdrop-filter: blur(10px);
+}
+
+.banner-title {
+    font-size: clamp(2.5rem, 6vw, 4.2rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 30px rgba(0,0,0,0.3);
+}
+
+.banner-highlight {
+    background: linear-gradient(135deg, #E8652D, #F0845A, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.banner-subtitle {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+.banner-subtitle strong {
+    color: #fbbf24;
+    font-size: 1.3em;
+}
+
+/* Banner Features */
+.banner-features {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 36px;
+}
+
+.banner-feature {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    backdrop-filter: blur(6px);
+    color: rgba(255,255,255,0.9);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.banner-feature:hover {
+    background: rgba(232, 101, 45, 0.12);
+    border-color: rgba(232, 101, 45, 0.3);
+    transform: translateX(6px);
+}
+
+.banner-feature-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+/* Banner CTA */
+.banner-cta-btn {
+    display: inline-block;
+    padding: 18px 48px;
+    background: linear-gradient(135deg, #E8652D, #F0845A);
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 800;
+    text-decoration: none;
+    border-radius: 100px;
+    letter-spacing: 0.03em;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 30px rgba(232, 101, 45, 0.4);
+    animation: bannerPulse 2.5s ease-in-out infinite;
+}
+
+.banner-cta-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 40px rgba(232, 101, 45, 0.55);
+}
+
+@keyframes bannerPulse {
+    0%, 100% { box-shadow: 0 6px 30px rgba(232, 101, 45, 0.4); }
+    50% { box-shadow: 0 8px 45px rgba(232, 101, 45, 0.6); }
+}
+
+.banner-spots {
+    margin-top: 16px;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.5);
+}
+
+.banner-spots strong {
+    color: #fbbf24;
+}
+
+/* Photo Wrapper */
+.banner-photo-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeInUp 0.8s ease-out 0.3s both;
+}
+
+.banner-photo-glow {
+    position: absolute;
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, rgba(232, 101, 45, 0.25) 0%, rgba(124, 58, 237, 0.1) 50%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(40px);
+    z-index: 0;
+    animation: glowPulse 4s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.15); opacity: 1; }
+}
+
+.banner-photo-ring {
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    border: 2px solid rgba(232, 101, 45, 0.25);
+    z-index: 1;
+    animation: ringRotate 20s linear infinite;
+}
+
+.banner-photo-ring::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: #E8652D;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #E8652D;
+}
+
+@keyframes ringRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.banner-photo {
+    width: 320px;
+    height: 320px;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 50%;
+    border: 4px solid rgba(232, 101, 45, 0.4);
+    box-shadow: 0 0 50px rgba(232, 101, 45, 0.2), 0 20px 60px rgba(0,0,0,0.4);
+    position: relative;
+    z-index: 2;
+}
+
+/* Name tag */
+.banner-name-tag {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10, 14, 39, 0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(232, 101, 45, 0.4);
+    border-radius: 100px;
+    padding: 10px 28px;
+    text-align: center;
+    z-index: 3;
+    white-space: nowrap;
+}
+
+.banner-name-tag strong {
+    display: block;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+}
+
+.banner-name-tag span {
+    color: #F0845A;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Floating tech badges */
+.banner-float-badge {
+    position: absolute;
+    padding: 8px 18px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 100px;
+    color: rgba(255,255,255,0.9);
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 3;
+    white-space: nowrap;
+}
+
+.badge-1 {
+    top: 10%;
+    right: 5%;
+    animation: badgeFloat 4s ease-in-out infinite;
+}
+
+.badge-2 {
+    top: 45%;
+    left: -10%;
+    animation: badgeFloat 5s ease-in-out infinite 1s;
+}
+
+.badge-3 {
+    bottom: 15%;
+    right: 0%;
+    animation: badgeFloat 4.5s ease-in-out infinite 0.5s;
+}
+
+@keyframes badgeFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
 /* === HERO === */
 .hero {
     position: relative;
