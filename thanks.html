@@ -223,7 +223,21 @@
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '1961041421163688');
     fbq('track', 'PageView');
-    fbq('track', 'Lead');
+    function getCookie(name) {
+        const nameEq = `${name}=`;
+        return document.cookie.split(';').map(cookie => cookie.trim()).find(cookie => cookie.startsWith(nameEq))?.slice(nameEq.length) || '';
+    }
+    function clearRootCookie(name) {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.trungcaha.click`;
+    }
+    const leadId = new URLSearchParams(window.location.search).get('lead_id');
+    const pendingLeadId = getCookie('pending_lead_id');
+    const leadStorageKey = leadId ? `metaLeadSent:${leadId}` : '';
+    if (leadId && leadId === pendingLeadId && localStorage.getItem(leadStorageKey) !== '1') {
+        fbq('track', 'Lead', {}, { eventID: leadId });
+        localStorage.setItem(leadStorageKey, '1');
+        clearRootCookie('pending_lead_id');
+    }
     </script>
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1961041421163688&ev=PageView&noscript=1"

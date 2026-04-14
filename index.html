@@ -591,7 +591,13 @@
             submitBtn.style.opacity = '1';
 
             // Chuyển hướng sang trang cám ơn
-            window.location.href = 'https://camon.trungcaha.click';
+            const leadId = (window.crypto && window.crypto.randomUUID)
+                ? window.crypto.randomUUID()
+                : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+            setRootCookie('pending_lead_id', leadId, 1);
+            const thankYouUrl = new URL('https://camon.trungcaha.click');
+            thankYouUrl.searchParams.set('lead_id', leadId);
+            window.location.href = thankYouUrl.toString();
             });
         });
 
