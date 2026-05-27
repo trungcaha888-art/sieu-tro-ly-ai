@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zalo Poster - Siêu Trợ Lý (Light Theme)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .poster {
+            width: 1080px;
+            height: 1080px;
+            background-color: #ffffff;
+            position: relative;
+            overflow: hidden;
+            color: #1a1a1a;
+            padding: 70px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+        /* Top orange bar */
+        .poster::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 15px;
+            background: #E8652D;
+            z-index: 20;
+        }
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(232, 101, 45, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(232, 101, 45, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .circle-bg {
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(232, 101, 45, 0.05) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            z-index: 1;
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            width: 65%; /* Giới hạn chiều rộng text để không đè lên hình bên phải */
+            display: flex;
+            flex-direction: column;
+        }
+        .badge {
+            align-self: flex-start;
+            padding: 10px 24px;
+            background: #fff5f0;
+            border: 1px solid #E8652D;
+            border-radius: 8px;
+            color: #E8652D;
+            font-size: 24px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+        .title {
+            font-size: 105px;
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 25px;
+            color: #1a1a1a;
+        }
+        .title span {
+            color: #E8652D;
+        }
+        .subtitle {
+            font-size: 38px;
+            color: #555;
+            line-height: 1.4;
+            font-weight: 600;
+            margin-bottom: 60px;
+        }
+        .subtitle strong {
+            color: #E8652D;
+            background: #fff5f0;
+            padding: 0 8px;
+        }
+        .benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .benefit {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 24px 30px;
+            background: #fcfcfc;
+            border: 1px solid #eee;
+            border-left: 6px solid #E8652D;
+            border-radius: 12px;
+            font-size: 30px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            width: 100%;
+        }
+        .check {
+            color: #E8652D;
+            font-size: 36px;
+        }
+        .footer-info {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+        .info-box {
+            display: flex;
+            flex-direction: column;
+        }
+        .info-label {
+            font-size: 20px;
+            color: #888;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .info-value {
+            font-size: 34px;
+            font-weight: 900;
+            color: #1a1a1a;
+        }
+        .expert-container {
+            position: absolute;
+            right: -50px;
+            bottom: 0;
+            width: 50%;
+            height: 90%;
+            z-index: 5;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+        }
+        .expert-img {
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(-20px 0 30px rgba(0,0,0,0.1));
+        }
+        /* Phân tách vùng bằng một đường dốc nhẹ hoặc bóng đổ */
+        .decoration-line {
+            position: absolute;
+            right: 40%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, #eee, transparent);
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <div class="grid-bg"></div>
+        <div class="circle-bg"></div>
+        <div class="decoration-line"></div>
+        
+        <!-- Hình ảnh thầy đẩy sang phải và không bị chồng lấp nội dung -->
+        <div class="expert-container">
+            <img src="ảnh 6.png" class="expert-img" alt="Expert">
+        </div>
+
+        <div class="content">
+            <div class="badge">🚀 Tự Động Hóa 80% Công Việc</div>
+            <h1 class="title">SIÊU TRỢ LÝ<br><span>AI CÁ NHÂN</span></h1>
+            <p class="subtitle">1 Hệ thống - 3 Bước xây dựng<br>Hiệu quả <strong>ngay lập tức</strong></p>
+            
+            <div class="benefits">
+                <div class="benefit">
+                    <span class="check">✓</span> Workflow Marketing Tự Động
+                </div>
+                <div class="benefit">
+                    <span class="check">✓</span> Bot Báo cáo qua Zalo
+                </div>
+                <div class="benefit">
+                    <span class="check">✓</span> Kế toán Realtime 24/7
+                </div>
+            </div>
+
+            <div class="footer-info">
+                <div class="info-box">
+                    <span class="info-label">📅 Thời Gian</span>
+                    <span class="info-value">19:45 - 14/04</span>
+                </div>
+                <div class="info-box">
+                    <span class="info-label">📍 Hình Thức</span>
+                    <span class="info-value">ONLINE QUA ZOOM</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
